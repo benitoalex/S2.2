@@ -94,7 +94,8 @@ function buy(id) {
 
 // Exercise 2
 function cleanCart() {
-    
+    cart = [];
+    console.log("El carret s'ha buidat correctament.");
 }
 
 // Exercise 3
