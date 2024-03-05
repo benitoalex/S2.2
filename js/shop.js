@@ -76,13 +76,25 @@ var total = 0;
 
 // Exercise 1
 function buy(id) {
+    const prod = products.find(item => item.id === id);
+    if(prod) {
+        const exist = cart.findIndex (item => item.id === id);
+
+        if(exist !== -1) {
+            cart[exist].quantity++;
+            console.log(`S'ha incrementat la quantitat del producte ${prod.name} al carret. Quantitat total: ${cart[exist].quantity}`);
+        } else {
+            cart.push({...prod, quantity: 1});
+        }
+        console.log(`Producte afegit al carret: ${prod.name}`);
+    }
     // 1. Loop for to the array products to get the item to add to cart
     // 2. Add found product to the cart array
 }
 
 // Exercise 2
 function cleanCart() {
-
+    
 }
 
 // Exercise 3
