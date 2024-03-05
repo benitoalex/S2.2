@@ -122,25 +122,31 @@ function applyPromotionsCart() {
     for (let i = 0; i < cart.length; i++) {
         const product = cart[i];
         const quantity = product.quantity;
-
+        console.log(`Product: ${product.name}, Quantity: ${quantity}`);
         if (product.offer) {
             const offer = product.offer;
+            console.log(`Offer: ${offer.number} for ${offer.percent}% discount`);
             if (quantity >= offer.number) {
                 const discount = product.price * offer.percent / 100 * quantity;
+                console.log(`Discount: ${discount}`);
                 cart[i].subtotalWithDiscount = (product.price * quantity) - discount;
             } else {
+                console.log("Offer not applicable");
                 cart[i].subtotalWithDiscount = product.price * quantity;
             }
         } else {
+            console.log("No offer for this product");
             cart[i].subtotalWithDiscount = product.price * quantity;
         }
+        console.log(`Subtotal with discount: ${cart[i].subtotalWithDiscount}`);
     }
+    
     // Apply promotions to each item in the array "cart"
 }
 
 // Exercise 5
 function printCart() {
-   
+    
 }
 
 
