@@ -95,6 +95,10 @@ function buy(id) {
 // Exercise 2
 function cleanCart() {
     cart = [];
+    const cartList = document.getElementById('cart_list');
+    cartList.innerHTML = '';
+    const totalPriceElement = document.getElementById('total_price');
+    totalPriceElement.innerHTML = '0';
     console.log("El carret s'ha buidat correctament.");
 }
 
@@ -115,18 +119,20 @@ console.log("Import", calculateTotal());
 
 // Exercise 4
 function applyPromotionsCart() {
-    for (let i = 0; i > cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
         const product = cart[i];
         const quantity = product.quantity;
 
-        if (product.name.includes("cooking oil") && quantity >= 3) {
-            const discount = product.price * 0.2 * quantity;
-            cart[i].subtotalWithDiscount = product.price * quantity - discount;
-        }
-
-        else if (product.type.includes("grocery") && quantity >= 10) {
-            const discount = product.price * 0.3 * quantity;
-            cart[i].subtotalWithDiscount = product.price * quantity - discount;
+        if (product.offer) {
+            const offer = product.offer;
+            if (quantity >= offer.number) {
+                const discount = product.price * offer.percent / 100 * quantity;
+                cart[i].subtotalWithDiscount = (product.price * quantity) - discount;
+            } else {
+                cart[i].subtotalWithDiscount = product.price * quantity;
+            }
+        } else {
+            cart[i].subtotalWithDiscount = product.price * quantity;
         }
     }
     // Apply promotions to each item in the array "cart"
@@ -134,8 +140,7 @@ function applyPromotionsCart() {
 
 // Exercise 5
 function printCart() {
-    
-
+   
 }
 
 
