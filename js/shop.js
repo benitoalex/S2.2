@@ -99,6 +99,9 @@ function cleanCart() {
     cartList.innerHTML = '';
     const totalPriceElement = document.getElementById('total_price');
     totalPriceElement.innerHTML = '0';
+    const totalCountProd = document.getElementById('count_product');
+    totalCountProd.innerHTML = '0';
+
     console.log("El carret s'ha buidat correctament.");
 }
 
@@ -140,13 +143,67 @@ function applyPromotionsCart() {
         }
         console.log(`Subtotal with discount: ${cart[i].subtotalWithDiscount}`);
     }
-    
+
     // Apply promotions to each item in the array "cart"
 }
 
 // Exercise 5
 function printCart() {
-    
+    console.log("Printing cart...");
+    applyPromotionsCart();
+    const cartList = document.getElementById('cart_list');
+    cartList.innerHTML = ''; // Netejem la llista de productes abans d'afegir els nous productes
+    let totalPrice = 0;
+
+    for (let i = 0; i < cart.length; i++) {
+        const product = cart[i];
+        const row = document.createElement('tr');
+
+        // Afegim les cel·les de la fila amb la informació del producte
+        row.innerHTML = `
+            <th scope="row">${product.name}</th>
+            <td>${product.price}</td>
+            <td>${product.quantity}</td>
+            <td>${product.subtotalWithDiscount ? product.subtotalWithDiscount.toFixed(2) : (product.price * product.quantity).toFixed(2)}</td>
+        `;
+
+        cartList.appendChild(row); // Afegim la fila a la llista de productes
+
+        // Calculem el preu total amb els descomptes
+        totalPrice += product.subtotalWithDiscount ? product.subtotalWithDiscount : (product.price * product.quantity);
+        const totalCountProd = document.getElementById('count_product');
+        totalCountProd.innerHTML = totalPrice;
+
+    }
+
+    // Actualitzem el preu total mostrat
+    const totalPriceElement = document.getElementById('total_price');
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+
+    // Mostrem el modal del carret
+
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    const cartModalElement = document.getElementById('cartModal');
+
+    // Escuchar el evento 'hidden.bs.modal' que se dispara cuando se cierra el modal
+    cartModalElement.addEventListener('hidden.bs.modal', function () {
+        // Forzar un restablecimiento del scroll al principio de la página
+        window.scrollTo(0, 0);
+
+        // Eliminar el fondo del modal
+        const backdrop = document.getElementsByClassName('modal-backdrop')[0];
+        backdrop.parentNode.removeChild(backdrop);
+
+        // Restablecer los atributos relacionados con el modal
+        cartModalElement.removeAttribute('tabindex');
+        cartModalElement.removeAttribute('aria-modal');
+        cartModalElement.removeAttribute('role');
+    });
+
+    // Mostrar el modal del carrito
+    cartModal.show();
+
+
 }
 
 
