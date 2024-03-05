@@ -77,14 +77,14 @@ var total = 0;
 // Exercise 1
 function buy(id) {
     const prod = products.find(item => item.id === id);
-    if(prod) {
-        const exist = cart.findIndex (item => item.id === id);
+    if (prod) {
+        const exist = cart.findIndex(item => item.id === id);
 
-        if(exist !== -1) {
+        if (exist !== -1) {
             cart[exist].quantity++;
             console.log(`S'ha incrementat la quantitat del producte ${prod.name} al carret. Quantitat total: ${cart[exist].quantity}`);
         } else {
-            cart.push({...prod, quantity: 1});
+            cart.push({ ...prod, quantity: 1 });
         }
         console.log(`Producte afegit al carret: ${prod.name}`);
     }
@@ -102,7 +102,7 @@ function cleanCart() {
 function calculateTotal() {
     let total = 0;
 
-    for (let i = 0; i < cart.length; i++){
+    for (let i = 0; i < cart.length; i++) {
         total += cart[i].price * cart[i].quantity;
     }
 
@@ -115,12 +115,27 @@ console.log("Import", calculateTotal());
 
 // Exercise 4
 function applyPromotionsCart() {
+    for (let i = 0; i > cart.length; i++) {
+        const product = cart[i];
+        const quantity = product.quantity;
+
+        if (product.name.includes("cooking oil") && quantity >= 3) {
+            const discount = product.price * 0.2 * quantity;
+            cart[i].subtotalWithDiscount = product.price * quantity - discount;
+        }
+
+        else if (product.type.includes("grocery") && quantity >= 10) {
+            const discount = product.price * 0.3 * quantity;
+            cart[i].subtotalWithDiscount = product.price * quantity - discount;
+        }
+    }
     // Apply promotions to each item in the array "cart"
 }
 
 // Exercise 5
 function printCart() {
-    // Fill the shopping cart modal manipulating the shopping cart dom
+    
+
 }
 
 
