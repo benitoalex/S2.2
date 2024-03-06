@@ -87,9 +87,10 @@ function buy(id) {
             cart.push({ ...prod, quantity: 1 });
         }
         console.log(`Producte afegit al carret: ${prod.name}`);
+
+        // Mostrar el botón "Remove from cart"
+        document.getElementById(`removeBtn${id}`).style.display = 'block';
     }
-    // 1. Loop for to the array products to get the item to add to cart
-    // 2. Add found product to the cart array
 }
 
 // Exercise 2
@@ -101,6 +102,10 @@ function cleanCart() {
     totalPriceElement.innerHTML = '0';
     const totalCountProd = document.getElementById('count_product');
     totalCountProd.innerHTML = '0';
+
+    document.querySelectorAll('[id^="removeBtn"]').forEach(button => {
+        button.style.display = 'none';
+    });
 
     console.log("El carret s'ha buidat correctament.");
 }
@@ -211,6 +216,20 @@ function printCart() {
 
 // Exercise 7
 function removeFromCart(id) {
+    const index = cart.findIndex(item => item.id === id);
+
+    if(index !== -1) {
+        cart[index].quantity--;
+    }
+
+    if(cart[index].quantity === 0) {
+        cart.splice(index, 1);
+    }
+
+    applyPromotionsCart();
+
+    printCart();
+
 
 }
 
