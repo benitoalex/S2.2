@@ -90,9 +90,49 @@ function buy(id) {
 
         // Mostrar el botón "Remove from cart"
         document.getElementById(`removeBtn${id}`).style.display = 'block';
+
+        const total = calculateTotal();
+        updateTotalCount(total);
+
+        // Mostrar u ocultar el botón "Remove from cart" según sea necesario
+        toggleRemoveButtonVisibility(id, true);
     }
 }
 
+function removeFromCart(id) {
+    // Implementa la función para remover el producto del carrito
+    // y luego oculta el botón "Remove from cart" correspondiente
+    // aquí, cuando eliminas un producto del carrito.
+    // Aquí está el esquema general:
+
+    // 1. Encuentra el índice del producto en el carrito.
+    const index = cart.findIndex(item => item.id === id);
+
+    // 2. Verifica si el producto está en el carrito.
+    if (index !== -1) {
+        // 3. Remueve el producto del carrito.
+        cart.splice(index, 1);
+
+        // 4. Recalcula y actualiza el total.
+        const total = calculateTotal();
+        updateTotalCount(total);
+    }
+
+    // Oculta el botón "Remove from cart".
+    toggleRemoveButtonVisibility(id, false);
+}
+
+function toggleRemoveButtonVisibility(id, visible) {
+    const removeButton = document.getElementById(`removeBtn${id}`);
+    if (removeButton) {
+        removeButton.style.display = visible ? 'block' : 'none';
+    }
+}
+
+function updateTotalCount(total) {
+    const totalCountProd = document.getElementById('count_product');
+    totalCountProd.innerHTML = total;
+}
 // Exercise 2
 function cleanCart() {
     cart = [];
@@ -116,11 +156,18 @@ function calculateTotal() {
 
     for (let i = 0; i < cart.length; i++) {
         total += cart[i].price * cart[i].quantity;
+
     }
 
+    const totalCountProd = document.getElementById('count_product');
+    totalCountProd.innerHTML = total;
+
     return total;
+
+
     // Calculate total price of the cart using the "cartList" array
 }
+
 
 console.log("Carret", cart);
 console.log("Import", calculateTotal());
@@ -160,6 +207,12 @@ function printCart() {
     cartList.innerHTML = ''; // Netejem la llista de productes abans d'afegir els nous productes
     let totalPrice = 0;
 
+    if (cart.length === 0) {
+        // Si el carrito está vacío, establece el contador de productos en 0
+        const totalCountProd = document.getElementById('count_product');
+        totalCountProd.innerHTML = '0';
+    }
+
     for (let i = 0; i < cart.length; i++) {
         const product = cart[i];
         const row = document.createElement('tr');
@@ -181,34 +234,33 @@ function printCart() {
 
     }
 
-    // Actualitzem el preu total mostrat
     const totalPriceElement = document.getElementById('total_price');
     totalPriceElement.textContent = totalPrice.toFixed(2);
 
-    // Mostrem el modal del carret
+    if (cart.length > 0) {
+        const totalCountProd = document.getElementById('count_product');
+        totalCountProd.innerHTML = totalPrice;
+    }
 
-    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    // Mostramos el modal del carrito
     const cartModalElement = document.getElementById('cartModal');
+    if (cartModalElement) { // Verificamos si el modal existe
+        const cartModal = new bootstrap.Modal(cartModalElement);
+        cartModal.show();
 
-    // Escuchar el evento 'hidden.bs.modal' que se dispara cuando se cierra el modal
-    cartModalElement.addEventListener('hidden.bs.modal', function () {
-        // Forzar un restablecimiento del scroll al principio de la página
-        window.scrollTo(0, 0);
+        // Escuchamos el evento 'hidden.bs.modal' que se dispara cuando se cierra el modal
+        cartModalElement.addEventListener('hidden.bs.modal', function () {
+            // Eliminar el backdrop manualmente
+            document.querySelector('.modal-backdrop').remove();
 
-        // Eliminar el fondo del modal
-        const backdrop = document.getElementsByClassName('modal-backdrop')[0];
-        backdrop.parentNode.removeChild(backdrop);
-
-        // Restablecer los atributos relacionados con el modal
-        cartModalElement.removeAttribute('tabindex');
-        cartModalElement.removeAttribute('aria-modal');
-        cartModalElement.removeAttribute('role');
-    });
-
-    // Mostrar el modal del carrito
-    cartModal.show();
-
-
+            // Forzar un restablecimiento del scroll al principio de la página
+            window.scrollTo(0, 0);
+            // Reestablecer el overflow del body
+            document.body.style.overflow = 'auto';
+        });
+    } else {
+        console.error("Error: No se pudo encontrar el elemento del modal.");
+    }
 }
 
 
@@ -218,11 +270,11 @@ function printCart() {
 function removeFromCart(id) {
     const index = cart.findIndex(item => item.id === id);
 
-    if(index !== -1) {
+    if (index !== -1) {
         cart[index].quantity--;
     }
 
-    if(cart[index].quantity === 0) {
+    if (cart[index].quantity === 0) {
         cart.splice(index, 1);
     }
 
